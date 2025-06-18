@@ -9,7 +9,8 @@ extensions = [
     "breathe",
     "exhale",
     "sphinx_rtd_theme",
-    "myst_parser"
+    "myst_parser",
+    'sphinx.ext.autosectionlabel'
 ]
 
 breathe_projects = {"DictCPP": "_doxygen/xml/"}
@@ -17,19 +18,21 @@ breathe_default_project = "DictCPP"
 
 exhale_args = {
     "containmentFolder": "./_api",
-    "rootFileName": "dictcpp.rst",
+    "rootFileName": "libdictcpp.rst",
     "doxygenStripFromPath": "..",
-    "rootFileTitle": "DictCPP Documentation",
+    "rootFileTitle": "Dict",
     "createTreeView": True,
     "exhaleExecutesDoxygen": True,
     "exhaleDoxygenStdin": textwrap.dedent("""
         INPUT = ..
         FILE_PATTERNS = *.hpp *.h
+        EXCLUDE_PATTERNS = */docs/* \
+                           */tests/*
     """)
 }
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', ".venv"]
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']

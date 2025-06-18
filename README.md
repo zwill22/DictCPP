@@ -1,4 +1,4 @@
-# DictCPP
+# DictCPP - A C++ Dictionary
 
 [![C++](https://img.shields.io/badge/C++-%2300599C.svg?logo=c%2B%2B&logoColor=white)](#)
 [![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/zwill22/DictCPP)
