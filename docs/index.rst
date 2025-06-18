@@ -8,7 +8,7 @@ This page contains the documentation for `DictCPP`_ project.
 .. include:: ../README.md
    :parser: myst_parser.sphinx_
 
-.. include:: _api/dictcpp.rst
+.. include:: ./_api/dictcpp.rst
 
 .. toctree:: 
    :maxdepth: 2
