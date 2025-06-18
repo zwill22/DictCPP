@@ -37,7 +37,7 @@ jobs:
           restore-keys: ${{matrix.os}}-Catch2-
 
       - name: build catch2
-        if: steps.cache-catch.outputs.cache-hit != true
+        if: steps.cache-catch.outputs.cache-hit != 'true'
         shell: bash
         run: |
           git clone https://github.com/catchorg/Catch2.git --depth 1
