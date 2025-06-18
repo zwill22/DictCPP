@@ -5,7 +5,7 @@
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?&logo=buy-me-a-coffee&logoColor=black)](https://coff.ee/zmwill)
 [![License: MIT](https://img.shields.io/github/license/zwill22/dictcpp)](https://github.com/zwill22/dictcpp/blob/main/LICENSE)
 [![CI Build](https://github.com/zwill22/dictcpp/actions/workflows/ci.yml/badge.svg)](https://github.com/zwill22/dictcpp/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/github/zwill22/DictCPP/graph/badge.svg?token=5QH3XLW4Y6)](https://codecov.io/github/zwill22/DictCPP)
+[![codecov](https://codecov.io/github/zwill22/DictCPP/graph/badge.svg)](https://codecov.io/github/zwill22/DictCPP)
 
 This is a header-only template for a C++ implementation of a Python `dict`.
 In particular the ordering of elements within a Python dictionary is determined by the order they are added.
