@@ -76,4 +76,26 @@ TEST_CASE("Element access") {
 
     CHECK(dict[3] == 100);
     CHECK(dict.at(3) == 100);
+
+    const auto value = dict[2];
+    CHECK(value == 20);
+    const auto value2 = dict[3];
+    CHECK(value2 == 100);
+
+    auto value3 = dict[2];
+    CHECK(value3 == 20);
+    value3 = 100;
+    CHECK(value3 == 100);
+    CHECK(dict[2] == 20);
+    CHECK(dict.at(2) == 20);
+
+    auto value4 = dict[3];
+    CHECK(value4 == 100);
+    value4 = 200;
+    CHECK(value4 == 200);
+    CHECK(dict[3] == 100);
+    CHECK(dict.at(3) == 100);
+
+    CHECK_THROWS_WITH(dict.at(5), "Key not found in dictionary");
+    CHECK_THROWS_WITH(dict[6], "Key not found in dictionary");
 }

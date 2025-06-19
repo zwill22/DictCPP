@@ -4,10 +4,6 @@
 #include <vector>
 
 namespace dictcpp {
-inline bool library_initialized() {
-    return true;
-}
-
 template<typename Key, typename Value>
 class Dict {
     std::vector<Key> keys;
@@ -20,7 +16,7 @@ class Dict {
             }
         }
 
-        throw std::out_of_range("Key not found");
+        throw std::logic_error("`get_index` called but key not in dictionary");
     }
 
 public:
@@ -38,7 +34,7 @@ public:
 
     const Value &operator[](const Key &key) const {
         if (!std::set<Key>(keys.begin(), keys.end()).contains(key)) {
-            throw std::out_of_range("Key not found");
+            throw std::out_of_range("Key not found in dictionary");
         }
 
         return values[get_index(key)];
@@ -64,7 +60,6 @@ public:
     const Value &at(const Key &key) const {
         return operator[](key);
     }
-
 };
 }
 
