@@ -1,4 +1,4 @@
-DictCPP Dcumentation
+DictCPP Documentation
 =====================
 
 This page contains the documentation for the `DictCPP`_ project.
@@ -8,7 +8,6 @@ This page contains the documentation for the `DictCPP`_ project.
 .. include:: ../README.md
    :parser: myst_parser.sphinx_
 
-.. include:: ./_api/libdictcpp.rst
+.. include:: ./_api/library_root.rst
 
-.. toctree:: 
-   :maxdepth: 2
+.. include:: licensing.rst
