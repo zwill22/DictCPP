@@ -28,3 +28,7 @@ target_include_directories(catch INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DI
 add_executable(TestDict tests/test_dict.cpp)
 target_link_libraries(TestDict catch DictCPP)
 catch_discover_tests(TestDict)
+
+add_executable(TestDirectAccess tests/test_direct_usage.cpp)
+target_link_libraries(TestDirectAccess catch DictCPP)
+catch_discover_tests(TestDirectAccess)

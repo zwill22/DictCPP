@@ -4,7 +4,6 @@
 #include <vector>
 
 namespace dictcpp {
-
 /// A structure representing a single item (key-value pair) in a dictionary.
 /// Key
 ///
@@ -145,6 +144,36 @@ public:
         }
 
         return item_list;
+    }
+
+    /// Returns an iterator for iterating through the dictionary.
+    /// The iterator point to the beginning of the `key_list`, so that this is
+    /// looped through.
+    ///
+    /// @return Iterator pointing to the beginning of the `key_list`
+    typename std::vector<Key>::iterator begin() {
+        return key_list.begin();
+    }
+
+    /// Returns an iterator for iterating through a `const` dictionary.
+    ///
+    /// @return Iterator pointing to the `const` key at the beginning of `key_list`
+    typename std::vector<const Key>::iterator begin() const {
+        return key_list.begin();
+    }
+
+    /// Returns a (non-const) iterator pointing to the end of the dictionary
+    ///
+    /// @return Iterator pointing to the end of the `key_list`
+    typename std::vector<Key>::iterator end() {
+        return key_list.end();
+    }
+
+    /// Return a (const) iterator pointing to the end of the dictionary
+    ///
+    /// @return Iterator pointing to the end of the `const key_list`
+    typename std::vector<const Key>::iterator end() const {
+        return key_list.end();
     }
 };
 }
