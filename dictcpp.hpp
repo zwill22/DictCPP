@@ -152,7 +152,7 @@ public:
         return val_list;
     }
 
-    /// Get the dictionary items as a `std::vector<Item>`
+    /// Get the dictionary items as a `std::vector`
     ///
     /// @return Vector of dictionary items (key-value pairs)
     std::vector<Item<Key, Value>> items() const {
@@ -285,7 +285,10 @@ public:
     }
 
     /// Remove and return the last key-value pair from the dictionary.
-    /// @return
+    ///
+    /// @throws std::out_of_range If dictionary is empty
+    ///
+    /// @return Key-value pair
     Item<Key, Value> popitem() {
         if (empty()) {
             throw std::out_of_range("Dictionary is empty, no items to pop!");
@@ -296,6 +299,15 @@ public:
         return {key, value};
     }
 
+    /// If key is in the dictionary, return its value.
+    /// Otherwise, insert key with value of `default_value` and return it.
+    /// If default value is not set, the default constructor for `Value` is used
+    /// and the value returned.
+    ///
+    /// @param key Dictionary key
+    /// @param default_value Default value to be used (default: `std::nullopt`)
+    ///
+    /// @return Value at key or default.
     Value setdefault(const Key &key, const std::optional<Value> &default_value = std::nullopt) {
         if (key_exists(key)) {
             return at(key);
@@ -309,12 +321,40 @@ public:
         return value;
     }
 
+    /// Updates the dictionary with key/value pairs from `other`.
+    ///
+    /// @param other Another dictionary
     void update(const Dict &other) {
         for (const auto &[k, v]: other.items()) {
             at(k) = v;
         }
     }
 
+    /// Updates the dictionary with key/value pairs from a list
+    ///
+    /// @param pairs A list of key-value pairs
+    void update(const std::initializer_list<Item<Key, Value>> &pairs) {
+        for (const auto &[k, v]: pairs) {
+            at(k) = v;
+        }
+    }
+
+    /// Updates the dictionary with key/value pairs from a vector
+    ///
+    /// @param pairs A list of key-value pairs
+    void update(const std::vector<Item<Key, Value>> &pairs) {
+        for (const auto &[k, v]: pairs) {
+            at(k) = v;
+        }
+    }
+
+
+    /// Create a new dictionary with merged keys from `this` and `other`.
+    /// The values of `other` take priority when they share keys.
+    ///
+    /// @param other Dictionary
+    ///
+    /// @return Dictionary which merges `this` and `other`
     Dict operator|(const Dict &other) const {
         auto dict = copy();
         dict.update(other);
@@ -322,17 +362,30 @@ public:
         return dict;
     }
 
+    /// Updates dictionary with values from another. Wrapper for `update()`
+    ///
+    /// @param other Another dictionary
     void operator|=(const Dict &other) {
         update(other);
     }
 
-    void operator|=(const std::initializer_list<Item<Key, Value>> &other) {
-        const auto dict = Dict(other);
-        update(dict);
+    /// Updates dictionary with values from initializer list. Wrapper for `update()`
+    ///
+    /// @param list An list of key-value pairs
+    void operator|=(const std::initializer_list<Item<Key, Value>> &list) {
+        update(list);
+    }
+
+    /// Update dictionary with values from vector. Wrapper for `update()`
+    ///
+    /// @param key_values A vector of key-value pairs
+    void operator|=(const std::vector<Item<Key, Value>> &key_values) {
+        update(key_values);
     }
 };
 
 // TODO Template specialisation for Value `bool`
+// TODO Add map constructor, converter and updater
 
 }
 
