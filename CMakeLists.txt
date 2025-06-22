@@ -29,6 +29,18 @@ add_executable(TestDict tests/test_dict.cpp)
 target_link_libraries(TestDict catch DictCPP)
 catch_discover_tests(TestDict)
 
-add_executable(TestDirectAccess tests/test_direct_usage.cpp)
+add_executable(TestDirectAccess tests/test_direct.cpp)
 target_link_libraries(TestDirectAccess catch DictCPP)
 catch_discover_tests(TestDirectAccess)
+
+add_executable(TestDelete tests/test_delete.cpp)
+target_link_libraries(TestDelete catch DictCPP)
+catch_discover_tests(TestDelete)
+
+add_executable(TestGet tests/test_get.cpp)
+target_link_libraries(TestGet catch DictCPP)
+catch_discover_tests(TestGet)
+
+add_executable(TestMerging tests/test_merge.cpp)
+target_link_libraries(TestMerging catch DictCPP)
+catch_discover_tests(TestMerging)

@@ -103,7 +103,33 @@ TEST_CASE("Element access") {
     CHECK_THROWS_WITH(dict['6'], "Key not found in dictionary");
 }
 
-TEST_CASE("Sequence initializer") {
+TEST_CASE("Initializer") {
+    const auto dict = Dict<char, int>{
+        {'a', 1},
+        {'c', 2},
+        {'e', 3}
+    };
+
+    REQUIRE(dict.size() == 3);
+
+    CHECK(dict['a'] == 1);
+    CHECK(dict['c'] == 2);
+    CHECK(dict['e'] == 3);
+
+    const auto dict2 = Dict<char, int>{
+            {'a', 1},
+            {'c', 2},
+            {'e', 3},
+            {'a', 9}
+    };
+    REQUIRE(dict2.size() == dict.size());
+
+    CHECK(dict2['a'] == 9);
+    CHECK(dict2['c'] == 2);
+    CHECK(dict2['e'] == 3);
+}
+
+TEST_CASE("Vector initializer") {
     std::vector<Item<char>> values = {{'a', 'b'}, {'c', 'd'}, {'e', 'f'}};
 
     const auto dict = Dict(values);
@@ -127,7 +153,7 @@ TEST_CASE("Sequence initializer") {
 }
 
 TEST_CASE("Access iterators") {
-    const auto dict = Dict<int>({
+    const auto dict = Dict({
         Item{1, 2},
         Item{3, 4},
         Item{5, 6},
@@ -160,4 +186,52 @@ TEST_CASE("Access iterators") {
         CHECK(value == values[i]);
         i++;
     }
+}
+
+TEST_CASE("Copy") {
+    auto dict1 = Dict<char, int>{
+        {'a', 2},
+        {'b', 4},
+        {'c', 6},
+        {'d', 8}
+    };
+
+    auto dict2 = dict1.copy();
+    REQUIRE(dict1.size() == dict2.size());
+    CHECK(dict2.at('a') == 2);
+    CHECK(dict2.at('b') == 4);
+    CHECK(dict2.at('c') == 6);
+    CHECK(dict2.at('d') == 8);
+
+    dict1['e'] = 10;
+    REQUIRE(dict1.size() == 5);
+    CHECK(dict1.at('a') == 2);
+    CHECK(dict1.at('b') == 4);
+    CHECK(dict1.at('c') == 6);
+    CHECK(dict1.at('d') == 8);
+    CHECK(dict1.at('e') == 10);
+
+    REQUIRE(dict2.size() == 4);
+    CHECK(dict2.at('a') == 2);
+    CHECK(dict2.at('b') == 4);
+    CHECK(dict2.at('c') == 6);
+    CHECK(dict2.at('d') == 8);
+    CHECK_FALSE(dict2.contains('e'));
+
+    dict2['f'] = 11;
+    REQUIRE(dict1.size() == 5);
+    CHECK(dict1.at('a') == 2);
+    CHECK(dict1.at('b') == 4);
+    CHECK(dict1.at('c') == 6);
+    CHECK(dict1.at('d') == 8);
+    CHECK(dict1.at('e') == 10);
+    CHECK_FALSE(dict1.contains('f'));
+
+    REQUIRE(dict2.size() == 5);
+    CHECK(dict2.at('a') == 2);
+    CHECK(dict2.at('b') == 4);
+    CHECK(dict2.at('c') == 6);
+    CHECK(dict2.at('d') == 8);
+    CHECK_FALSE(dict2.contains('e'));
+    CHECK(dict2.at('f') == 11);
 }

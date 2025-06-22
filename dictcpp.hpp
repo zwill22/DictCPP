@@ -42,10 +42,25 @@ public:
     Dict(): key_list({}), val_list({}) {
     }
 
-    /// Initialise a dictionary using a vector of `Item`s.
+    /// Initialise a dictionary using a list of `Item`s.
     ///
-    /// @param key_values A vector where each element is a dictionary `Item` (key-value pair)
-    explicit Dict(const std::vector<Item<Key, Value>> &key_values) : key_list(), val_list() {
+    /// @param key_values A list of dictionary `Item`s (key-value pair)
+    Dict(const std::initializer_list<Item<Key, Value>> &key_values) : key_list(), val_list() {
+        for (const auto &kv: key_values) {
+            if (key_exists(kv.key)) {
+                const auto index = get_index(kv.key);
+                val_list[index] = kv.value;
+            } else {
+                key_list.emplace_back(kv.key);
+                val_list.emplace_back(kv.value);
+            }
+        }
+    }
+
+    /// Initialise a dictionary using a std::vector
+    ///
+    /// @param key_values Key-value pairs in a vector
+    explicit Dict(const std::vector<Item<Key, Value>> &key_values) {
         for (const auto &kv: key_values) {
             if (key_exists(kv.key)) {
                 const auto index = get_index(kv.key);
@@ -74,6 +89,8 @@ public:
     /// Access value at key `key`
     ///
     /// @param key Dictionary key
+    ///
+    /// @throws std::out_of_range If key not in dictionary
     ///
     /// @return Constant reference to value at `dict[key]`
     const Value &operator[](const Key &key) const {
@@ -106,9 +123,9 @@ public:
         }
 
         key_list.push_back(key);
-        val_list.push_back(Value());
+        val_list.push_back({});
 
-        return val_list.back();
+        return *(std::end(val_list) - 1);
     }
 
     /// Access value at `key` or assign value at `key` (wrapper for `operator[]`)
@@ -124,6 +141,7 @@ public:
     ///
     /// @return Vector of dictionary keys
     std::vector<Key> keys() const {
+        // TODO Make a keys, values, and items a "View"
         return key_list;
     }
 
@@ -175,7 +193,147 @@ public:
     typename std::vector<const Key>::iterator end() const {
         return key_list.end();
     }
+
+    // TODO Implement reversed
+
+    /// Remove key from dictionary
+    ///
+    /// @throws std::out_of_range If key not in dictionary
+    void del(const Key &key) {
+        if (!contains(key)) {
+            throw std::out_of_range("Key not found in dictionary");
+        }
+
+        const auto index = get_index(key);
+
+        key_list.erase(key_list.begin() + index);
+        val_list.erase(val_list.begin() + index);
+    }
+
+    /// Check if dictionary contains `key`
+    ///
+    /// @param key A possible key
+    ///
+    /// @return Whether key is present in dictionary
+    bool contains(const Key &key) const {
+        return key_exists(key);
+    }
+
+    /// Remove all items from the dictionary
+    void clear() {
+        key_list = {};
+        val_list = {};
+    }
+
+    /// Creates a copy of the dictionary
+    ///
+    /// @return Exact copy of the dictionary
+    Dict copy() const {
+        auto new_dict = Dict();
+        new_dict.key_list = key_list;
+        new_dict.val_list = val_list;
+        return new_dict;
+    }
+
+    /// Get value from dictionary at key `key`
+    /// If the key is not present, the function returns the optional `default_value`,
+    /// if this does not exist an error is thrown.
+    ///
+    /// @param key Dictionary key
+    /// @param default_value Optional default (default: `std::nullopt`)
+    ///
+    /// @throws std::runtime_error If key not in dictionary and no default value is specified
+    ///
+    /// @return Value at key, if present, default value otherwise
+    Value get(const Key &key, const std::optional<Value> &default_value = std::nullopt) const {
+        if (key_exists(key)) {
+            const auto idx = get_index(key);
+            return val_list[idx];
+        }
+
+        if (!default_value) {
+            throw std::runtime_error("Key not found in dictionary and no default exists");
+        }
+
+        return default_value.value();
+    }
+
+    /// If the key is in the dictionary, remove it and return its value, else return the
+    /// default value. If no default value is given, an error is thrown.
+    ///
+    /// @param key The dictionary key
+    /// @param default_value Optional default value (default: `std::nullopt`)
+    ///
+    /// @throws std::runtime_error If key not in dictionary and no default value
+    ///
+    /// @return Value at key in dictionary if it exists, otherwise the default.
+    Value pop(const Key &key, const std::optional<Value> &default_value = std::nullopt) {
+        if (key_exists(key)) {
+            const auto idx = get_index(key);
+            const auto value = val_list[idx];
+
+            del(key);
+
+            return value;
+        }
+
+        if (!default_value) {
+            throw std::runtime_error("Key not found in dictionary and no default exists");
+        }
+
+        return default_value.value();
+    }
+
+    /// Remove and return the last key-value pair from the dictionary.
+    /// @return
+    Item<Key, Value> popitem() {
+        if (empty()) {
+            throw std::out_of_range("Dictionary is empty, no items to pop!");
+        }
+        const auto key = key_list.back();
+        const auto value = pop(key);
+
+        return {key, value};
+    }
+
+    Value setdefault(const Key &key, const std::optional<Value> &default_value = std::nullopt) {
+        if (key_exists(key)) {
+            return at(key);
+        }
+
+
+        key_list.emplace_back(key);
+        const Value value = default_value ? default_value.value() : Value();
+        val_list.emplace_back(value);
+
+        return value;
+    }
+
+    void update(const Dict &other) {
+        for (const auto &[k, v]: other.items()) {
+            at(k) = v;
+        }
+    }
+
+    Dict operator|(const Dict &other) const {
+        auto dict = copy();
+        dict.update(other);
+
+        return dict;
+    }
+
+    void operator|=(const Dict &other) {
+        update(other);
+    }
+
+    void operator|=(const std::initializer_list<Item<Key, Value>> &other) {
+        const auto dict = Dict(other);
+        update(dict);
+    }
 };
+
+// TODO Template specialisation for Value `bool`
+
 }
 
 #endif //DICTCPP_HPP
