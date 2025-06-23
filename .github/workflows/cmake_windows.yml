@@ -37,7 +37,7 @@ jobs:
           git clone https://github.com/catchorg/Catch2.git --depth 1
           cd Catch2
           New-Item "build" -ItemType Directory
-          cmake -B build -H . -D BUILD_TESTING=OFF
+          cmake -B build -D BUILD_TESTING=OFF
           cmake --build build/ --target install
           cd ..
 
