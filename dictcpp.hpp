@@ -387,6 +387,67 @@ public:
 // TODO Template specialisation for Value `bool`
 // TODO Add map constructor, converter and updater
 
+/// Return all keys from a `Dict` as a list (vector)
+///
+/// @tparam Key Dictionary key type
+/// @tparam Value Dictionary value type
+/// @param dict Dictionary `Dict`
+///
+/// @return Vector of keys
+template<typename Key, typename Value>
+std::vector<Key> list(const Dict<Key, Value> &dict) {
+    return dict.keys();
+}
+
+/// Get the length (size) of a dictionary
+///
+/// @tparam Key Dictionary key type
+/// @tparam Value Dictionary value type
+/// @param dict Dictionary
+///
+/// @return Length (size) of a dictionary (number of keys)
+template<typename Key, typename Value>
+size_t len(const Dict<Key, Value> &dict) {
+    return dict.size();
+}
+
+/// Initialise a `Dict` using an initializer list
+///
+/// @tparam Key Dictionary key type
+/// @tparam Value Dictionary value type
+/// @param list Input list
+///
+/// @return Dictionary
+template<typename Key, typename Value = Key>
+Dict<Key, Value> dict(const std::initializer_list<Item<Key, Value>> &list) {
+    return Dict<Key, Value>(list);
+}
+
+/// Create a new dictionary from a list of keys and a single value `value`. If `value` is not det the default
+/// constructor is called for each element.
+///
+/// @tparam Key Dictionary key type
+/// @tparam Value Dictionary value type
+/// @param keys Keys
+/// @param value Optional value to fill dictionary (default: std::nullopt)
+///
+/// @return Dictionary with keys from `keys` and `value` in each entry.
+template<typename Key, typename Value>
+Dict<Key, Value> fromkeys(
+    const std::vector<Key> &keys,
+    const std::optional<Value> &value = std::nullopt
+) {
+    Dict<Key, Value> dict;
+    for (const auto &key: keys) {
+        if (value) {
+            dict[key] = *value;
+        } else {
+            dict[key] = Value();
+        }
+    }
+
+    return dict;
+}
 }
 
 #endif //DICTCPP_HPP

@@ -37,6 +37,39 @@ TEST_CASE("Update dictionary") {
     CHECK(dict1.at(64) == 't');
 }
 
+
+TEST_CASE("Merge dictionaries") {
+    const auto dict1 = Dict<int, char>{
+            {1, 'a'},
+            {2, 'b'},
+            {4, 'c'},
+            {8, 'e'}
+    };
+
+    const auto dict2 = Dict<int, char>{
+            {2, 'z'},
+            {8, 'g'},
+            {16, 'j'},
+            {32, 'm'},
+            {64, 't'}
+    };
+
+    REQUIRE(dict1.size() == 4);
+    REQUIRE(dict2.size() == 5);
+
+    const auto dict3 = dict1 | dict2;
+
+    REQUIRE(dict3.size() == 7);
+
+    CHECK(dict3.at(1) == 'a');
+    CHECK(dict3.at(2) == 'z');
+    CHECK(dict3.at(4) == 'c');
+    CHECK(dict3.at(8) == 'g');
+    CHECK(dict3.at(16) == 'j');
+    CHECK(dict3.at(32) == 'm');
+    CHECK(dict3.at(64) == 't');
+}
+
 TEST_CASE("Update dictionary with |=") {
     auto dict1 = Dict<int, char>{
             {1, 'a'},

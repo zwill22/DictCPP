@@ -44,3 +44,7 @@ catch_discover_tests(TestGet)
 add_executable(TestMerging tests/test_merge.cpp)
 target_link_libraries(TestMerging catch DictCPP)
 catch_discover_tests(TestMerging)
+
+add_executable(TestFunctions tests/test_functions.cpp)
+target_link_libraries(TestFunctions catch DictCPP)
+catch_discover_tests(TestFunctions)
