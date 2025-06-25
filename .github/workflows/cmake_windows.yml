@@ -20,16 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: cache catch2
-        id: cache-catch
-        uses: actions/cache@v4
-        with:
-          path: ./Catch2
-          key: ${{matrix.os}}-Catch2-${{matrix.build_type}}-
-          restore-keys: ${{matrix.os}}-Catch2-${{matrix.build_type}}-
-
       - name: build catch2
-        if: steps.cache-catch.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           git clone https://github.com/catchorg/Catch2.git --depth 1
@@ -37,13 +28,6 @@ jobs:
           md build
           cmake -B build -D BUILD_TESTING=OFF
           cmake --build build/ --target install --config ${{matrix.build_type}}
-          cd ..
-
-      - name: install catch2
-        shell: powershell
-        run: |
-          cd Catch2
-          cmake --build build/ --target install
           cd ..
 
       - name: Configure CMake
