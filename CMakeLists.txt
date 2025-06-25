@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
-add_library(DictCPP SHARED dictcpp.hpp)
+add_library(DictCPP INTERFACE)
+target_include_directories(DictCPP INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>)
 set_target_properties(DictCPP PROPERTIES LINKER_LANGUAGE CXX)
 
 find_package(Catch2 3)
@@ -21,9 +22,9 @@ include(Catch)
 
 enable_testing()
 
-add_library(catch SHARED tests/catch.hpp)
-target_link_libraries(catch Catch2::Catch2WithMain)
-target_include_directories(catch INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>)
+add_library(catch INTERFACE)
+target_include_directories(catch INTERFACE tests)
+target_link_libraries(catch INTERFACE Catch2::Catch2WithMain)
 
 add_executable(TestDict tests/test_dict.cpp)
 target_link_libraries(TestDict catch DictCPP)

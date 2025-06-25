@@ -1,4 +1,6 @@
-.idea/
+Testing/
+build/
+idea/
 cmake-build-*/
 docs/_api
 docs/_build
