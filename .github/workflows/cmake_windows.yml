@@ -36,7 +36,7 @@ jobs:
           cd Catch2
           md build
           cmake -B build -D BUILD_TESTING=OFF
-          cmake --build build/ --target install
+          cmake --build build/ --target install --config ${{matrix.build_type}}
           cd ..
 
       - name: install catch2
