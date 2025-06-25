@@ -25,7 +25,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./Catch2
-          key: ${{matrix.os}}-Catch2-${{matrix-build_type}}-
+          key: ${{matrix.os}}-Catch2-${{matrix.build_type}}-
           restore-keys: ${{matrix.os}}-Catch2-${{matrix.build_type}}-
 
       - name: build catch2
