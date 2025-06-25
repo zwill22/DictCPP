@@ -25,8 +25,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./Catch2
-          key: ${{matrix.os}}-Catch2-
-          restore-keys: ${{matrix.os}}-Catch2-
+          key: ${{matrix.os}}-Catch2-${{matrix-build_type}}-
+          restore-keys: ${{matrix.os}}-Catch2-${{matrix.build_type}}-
 
       - name: build catch2
         if: steps.cache-catch.outputs.cache-hit != 'true'
