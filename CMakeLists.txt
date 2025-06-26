@@ -11,7 +11,7 @@ target_include_directories(DictCPP INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_
 set_target_properties(DictCPP PROPERTIES LINKER_LANGUAGE CXX)
 
 find_package(Catch2 3)
-if (${Catch2_DIR} MATCHES "Catch2_DIR_NOTFOUND")
+if (${Catch2_DIR} MATCHES "Catch2_DIR-NOTFOUND")
     message(FATAL_ERROR "Catch2 not found -- Cannot build tests")
 endif ()
 

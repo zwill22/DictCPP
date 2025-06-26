@@ -7,3 +7,4 @@ docs/_build
 docs/_doxygen
 docs/_html
 .devcontainer
+.docker
