@@ -28,8 +28,21 @@ jobs:
           sudo apt update
           sudo apt install -y cmake
 
+      - name: setup clang
+        if: matrix.compiler == 'clang++' && env.ACT
+        shell: bash
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 18
+          sudo apt update
+          sudo apt install clang-18
+          shopt -s expand_aliases
+          ln -s $(which clang++-18) /usr/bin/clang++
+
       - name: cache catch2
         id: cache-catch
+        if: ${{ !env.ACT }}
         uses: actions/cache@v4
         with:
           path: ./Catch2
@@ -54,12 +67,15 @@ jobs:
           cd ..
 
       - name: Configure CMake
+        shell: bash
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_COMPILER=${{matrix.compiler}}
 
       - name: Build
+        shell: bash
         run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
 
       - name: Test
+        shell: bash
         working-directory: ${{github.workspace}}/build
         run: ctest -C ${{matrix.build_type}} --output-on-failure
 
