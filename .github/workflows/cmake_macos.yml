@@ -53,8 +53,7 @@ jobs:
 
       - name: Configure CMake
         shell: bash
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_FLAGS="--std=c++20"
-
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++
       - name: Build
         shell: bash
         run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
