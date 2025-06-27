@@ -4,6 +4,7 @@
 [![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/zwill22/DictCPP)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?&logo=buy-me-a-coffee&logoColor=black)](https://coff.ee/zmwill)
 [![License: MIT](https://img.shields.io/github/license/zwill22/dictcpp)](https://github.com/zwill22/dictcpp/blob/main/LICENSE)
+[![CMake on Ubuntu](https://github.com/zwill22/DictCPP/actions/workflows/cmake_macos.yml/badge.svg)](https://github.com/zwill22/DictCPP/actions/workflows/cmake_macos.yml)
 [![CMake on Ubuntu](https://github.com/zwill22/DictCPP/actions/workflows/cmake_ubuntu.yml/badge.svg)](https://github.com/zwill22/DictCPP/actions/workflows/cmake_ubuntu.yml)
 [![CMake on Windows](https://github.com/zwill22/DictCPP/actions/workflows/cmake_windows.yml/badge.svg)](https://github.com/zwill22/DictCPP/actions/workflows/cmake_windows.yml)
 [![codecov](https://codecov.io/github/zwill22/DictCPP/graph/badge.svg)](https://codecov.io/github/zwill22/DictCPP)

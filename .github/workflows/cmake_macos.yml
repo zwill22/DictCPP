@@ -1,4 +1,4 @@
-name: CMake on Ubuntu
+name: CMake on macOS
 
 on:
   push:
@@ -14,31 +14,15 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest]
+        os: [macos-latest]
         build_type: [Debug, Release]
-        compiler: [g++, clang++]
-
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: install cmake
+      - name: check cmake
         shell: bash
-        run: |
-          sudo apt update
-          sudo apt install -y cmake
-
-      - name: setup clang
-        if: matrix.compiler == 'clang++' && env.ACT
-        shell: bash
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 18
-          sudo apt update
-          sudo apt install clang-18
-          shopt -s expand_aliases
-          ln -s $(which clang++-18) /usr/bin/clang++
+        run: cmake --version
 
       - name: cache catch2
         id: cache-catch
@@ -50,7 +34,7 @@ jobs:
           restore-keys: ${{matrix.os}}-Catch2-${{matrix.build_type}}-
 
       - name: build catch2
-        if: steps.cache-catch.outputs.cache-hit != 'true'
+        if: steps.cache-catch.outputs.cache-hit != 'true' && !env.ACT
         shell: bash
         run: |
           git clone https://github.com/catchorg/Catch2.git --depth 1
@@ -60,6 +44,7 @@ jobs:
           cd ..
 
       - name: install catch2
+        if: ${{ !env.ACT }}
         shell: bash
         run: |
           cd Catch2
@@ -68,7 +53,7 @@ jobs:
 
       - name: Configure CMake
         shell: bash
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_COMPILER=${{matrix.compiler}}
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
 
       - name: Build
         shell: bash
