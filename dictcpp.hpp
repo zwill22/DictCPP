@@ -74,6 +74,13 @@ public:
         }
     }
 
+    template<typename Compare = std::less<Key>, typename Allocator=std::allocator<std::pair<const Key, Value>>>
+    explicit Dict(const std::map<Key, Value, Compare, Allocator> &key_values) {
+        for (const auto &[k,v]: key_values) {
+            at(k) = v;
+        }
+    }
+
     /// Check if a dictionary is empty
     ///
     /// @return Whether the dictionary is empty or not
@@ -192,7 +199,7 @@ public:
     /// Return a (const) iterator pointing to the end of the dictionary
     ///
     /// @return Iterator pointing to the end of the `const key_list`
-   auto end() const {
+    auto end() const {
         return key_list.end();
     }
 
@@ -235,6 +242,16 @@ public:
         new_dict.key_list = key_list;
         new_dict.val_list = val_list;
         return new_dict;
+    }
+
+    template<typename Compare = std::less<Key>, typename Allocator = std::allocator<std::pair<const Key, Value>>>
+    std::map<Key, Value, Compare, Allocator> map() const {
+        std::map<Key, Value, Compare, Allocator> new_map;
+        for (const auto &k: key_list) {
+            new_map[k] = at(k);
+        }
+
+        return new_map;
     }
 
     /// Get value from dictionary at key `key`
@@ -350,6 +367,13 @@ public:
         }
     }
 
+    template<typename Compare = std::less<Key>, typename Allocator = std::allocator<std::pair<const Key, Value>>>
+    void update(const std::map<Key, Value, Compare, Allocator> &other) {
+        for (const auto &[k, v]: other) {
+            at(k) = v;
+        }
+    }
+
 
     /// Create a new dictionary with merged keys from `this` and `other`.
     /// The values of `other` take priority when they share keys.
@@ -373,7 +397,7 @@ public:
 
     /// Updates dictionary with values from initializer list. Wrapper for `update()`
     ///
-    /// @param list An list of key-value pairs
+    /// @param list A list of key-value pairs
     void operator|=(const std::initializer_list<Item<Key, Value>> &list) {
         update(list);
     }
@@ -384,10 +408,14 @@ public:
     void operator|=(const std::vector<Item<Key, Value>> &key_values) {
         update(key_values);
     }
+
+    template<typename Compare = std::less<Key>, typename Allocator = std::allocator<std::pair<const Key, Value>>>
+    void operator|=(const std::map<Key, Value, Compare, Allocator> &other) {
+        update(other);
+    }
 };
 
 // TODO Template specialisation for Value `bool`
-// TODO Add map constructor, converter and updater
 
 /// Return all keys from a `Dict` as a list (vector)
 ///
