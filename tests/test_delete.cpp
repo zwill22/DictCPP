@@ -5,13 +5,10 @@
 using dictcpp::Dict;
 using dictcpp::Item;
 
-TEST_CASE("Deletions") {
-    auto dict = Dict<char, int>{
-        {'a', 1},
-        {'b', 2},
-        {'c', 3},
-        {'d', 4}
-    };
+TEST_CASE(
+        "Deletions"
+) {
+    auto dict = Dict<char, int> {{'a', 1}, {'b', 2}, {'c', 3}, {'d', 4}};
 
     CHECK_THROWS_WITH(dict.del('e'), "Key not found in dictionary");
     REQUIRE(dict.size() == 4);
@@ -94,13 +91,10 @@ TEST_CASE("Deletions") {
     REQUIRE(dict.empty());
 }
 
-TEST_CASE("Clear") {
-    auto dict = Dict<char, int>{
-        {'a', 1},
-        {'c', 2},
-        {'e', 4},
-        {'g', 8}
-    };
+TEST_CASE(
+        "Clear"
+) {
+    auto dict = Dict<char, int> {{'a', 1}, {'c', 2}, {'e', 4}, {'g', 8}};
 
     REQUIRE(dict.size() == 4);
 

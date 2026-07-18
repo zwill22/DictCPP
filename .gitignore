@@ -8,3 +8,4 @@ docs/_doxygen
 docs/_html
 .devcontainer
 .docker
+.vscode 

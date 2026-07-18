@@ -1,14 +1,12 @@
-#include "dictcpp.hpp"
 #include "catch.hpp"
+#include "dictcpp.hpp"
 
 using dictcpp::Dict;
 
-TEST_CASE("Get values") {
-    const auto dict = Dict<int, char>{
-        {1, 'y'},
-        {2, 'n'},
-        {3, 'y'}
-    };
+TEST_CASE(
+        "Get values"
+) {
+    const auto dict = Dict<int, char> {{1, 'y'}, {2, 'n'}, {3, 'y'}};
 
     REQUIRE(dict.size() == 3);
 
@@ -18,7 +16,10 @@ TEST_CASE("Get values") {
         } else if (key == 2) {
             CHECK(dict.get(key) == 'n');
         } else {
-            CHECK_THROWS_WITH(dict.get(key), "Key not found in dictionary and no default exists");
+            CHECK_THROWS_WITH(
+                    dict.get(key),
+                    "Key not found in dictionary and no default exists"
+            );
         }
     }
 
@@ -41,16 +42,16 @@ TEST_CASE("Get values") {
     }
 }
 
-TEST_CASE("Pop values") {
-    auto dict = Dict<char, int>{
-        {'a', 1},
-        {'b', 0},
-        {'c', 1},
-        {'d', 0}
-    };
+TEST_CASE(
+        "Pop values"
+) {
+    auto dict = Dict<char, int> {{'a', 1}, {'b', 0}, {'c', 1}, {'d', 0}};
 
     REQUIRE(dict.size() == 4);
-    CHECK_THROWS_WITH(dict.pop('e'), "Key not found in dictionary and no default exists");
+    CHECK_THROWS_WITH(
+            dict.pop('e'),
+            "Key not found in dictionary and no default exists"
+    );
     CHECK(dict.pop('e', 1) == 1);
     REQUIRE(dict.size() == 4);
 
@@ -60,7 +61,10 @@ TEST_CASE("Pop values") {
     CHECK(dict.at('b') == 0);
     CHECK(dict.at('c') == 1);
 
-    CHECK_THROWS_WITH(dict.pop('d'), "Key not found in dictionary and no default exists");
+    CHECK_THROWS_WITH(
+            dict.pop('d'),
+            "Key not found in dictionary and no default exists"
+    );
     CHECK(dict.pop('d', 1) == 1);
     CHECK(dict.pop('d', 0) == 0);
 
@@ -70,7 +74,10 @@ TEST_CASE("Pop values") {
     CHECK(dict.at('a') == 1);
     CHECK(dict.at('c') == 1);
 
-    CHECK_THROWS_WITH(dict.pop('b'), "Key not found in dictionary and no default exists");
+    CHECK_THROWS_WITH(
+            dict.pop('b'),
+            "Key not found in dictionary and no default exists"
+    );
     CHECK(dict.pop('b', 1) == 1);
     CHECK(dict.pop('b', 0) == 0);
 
@@ -79,22 +86,25 @@ TEST_CASE("Pop values") {
     CHECK(dict.size() == 1);
     CHECK(dict.at('c') == 1);
 
-    CHECK_THROWS_WITH(dict.pop('a'), "Key not found in dictionary and no default exists");
+    CHECK_THROWS_WITH(
+            dict.pop('a'),
+            "Key not found in dictionary and no default exists"
+    );
     CHECK(dict.pop('a', 1) == 1);
     CHECK(dict.pop('a', 0) == 0);
 
-    CHECK_THROWS_WITH(dict.pop('f'), "Key not found in dictionary and no default exists");
+    CHECK_THROWS_WITH(
+            dict.pop('f'),
+            "Key not found in dictionary and no default exists"
+    );
     CHECK(dict.pop('f', 1) == 1);
     CHECK(dict.pop('f', 0) == 0);
 }
 
-TEST_CASE("Popitem") {
-    auto dict = Dict<int, char>{
-        {1, 'a'},
-        {-1, 'b'},
-        {2, 'c'},
-        {-2, 'd'}
-    };
+TEST_CASE(
+        "Popitem"
+) {
+    auto dict = Dict<int, char> {{1, 'a'}, {-1, 'b'}, {2, 'c'}, {-2, 'd'}};
 
     REQUIRE(dict.size() == 4);
 
@@ -125,16 +135,13 @@ TEST_CASE("Popitem") {
     CHECK_THROWS_WITH(dict.popitem(), "Dictionary is empty, no items to pop!");
 }
 
-TEST_CASE("Set default") {
-    auto dict = Dict<char, int>{
-        {'a', 11},
-        {'b', 21},
-        {'c', 41},
-        {'d', 81}
-    };
+TEST_CASE(
+        "Set default"
+) {
+    auto dict = Dict<char, int> {{'a', 11}, {'b', 21}, {'c', 41}, {'d', 81}};
 
     REQUIRE(dict.size() == 4);
-    CHECK(dict.setdefault('a')  == 11);
+    CHECK(dict.setdefault('a') == 11);
     CHECK(dict.setdefault('b') == 21);
     CHECK(dict.setdefault('c') == 41);
     CHECK(dict.setdefault('d') == 81);
@@ -157,5 +164,4 @@ TEST_CASE("Set default") {
 
     REQUIRE(dict.size() == 6);
     CHECK(dict.at('a') == 11);
-
 }

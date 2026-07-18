@@ -49,3 +49,7 @@ catch_discover_tests(TestMerging)
 add_executable(TestFunctions tests/test_functions.cpp)
 target_link_libraries(TestFunctions catch DictCPP)
 catch_discover_tests(TestFunctions)
+
+add_executable(TestMap tests/test_map.cpp)
+target_link_libraries(TestMap catch DictCPP)
+catch_discover_tests(TestMap)

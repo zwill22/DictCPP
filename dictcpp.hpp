@@ -1,11 +1,14 @@
 #ifndef DICTCPP_HPP
 #define DICTCPP_HPP
-#include <set>
-#include <vector>
+#include <algorithm>
+#include <map>
 #include <optional>
+#include <set>
 #include <stdexcept>
+#include <vector>
 
 namespace dictcpp {
+
 /// A structure representing a single item (key-value pair) in a dictionary.
 /// Key
 ///
@@ -26,28 +29,38 @@ class Dict {
     std::vector<Key> key_list;
     std::vector<Value> val_list;
 
-    bool key_exists(const Key &key) const {
+    bool key_exists(
+            const Key &key
+    ) const {
         return std::set<Key>(key_list.begin(), key_list.end()).contains(key);
     }
 
-    size_t get_index(const Key &key) const {
+    size_t get_index(
+            const Key &key
+    ) const {
         for (size_t i = 0; i < key_list.size(); i++) {
             if (key_list[i] == key) {
                 return i;
             }
         }
-        throw std::logic_error("`get_index` called but key not in dictionary");
+
+        throw std::runtime_error("Key not found in dictionary");
     }
 
 public:
     /// Initialise an empty dictionary
-    Dict(): key_list({}), val_list({}) {
-    }
+    Dict() :
+        key_list({}),
+        val_list({}) {}
 
     /// Initialise a dictionary using a list of `Item`s.
     ///
     /// @param key_values A list of dictionary `Item`s (key-value pair)
-    Dict(const std::initializer_list<Item<Key, Value>> &key_values) : key_list(), val_list() {
+    Dict(
+            const std::initializer_list<Item<Key, Value>> &key_values
+    ) :
+        key_list(),
+        val_list() {
         for (const auto &kv: key_values) {
             if (key_exists(kv.key)) {
                 const auto index = get_index(kv.key);
@@ -62,7 +75,9 @@ public:
     /// Initialise a dictionary using a std::vector
     ///
     /// @param key_values Key-value pairs in a vector
-    explicit Dict(const std::vector<Item<Key, Value>> &key_values) {
+    explicit Dict(
+            const std::vector<Item<Key, Value>> &key_values
+    ) {
         for (const auto &kv: key_values) {
             if (key_exists(kv.key)) {
                 const auto index = get_index(kv.key);
@@ -74,17 +89,30 @@ public:
         }
     }
 
+    template<
+            typename Compare = std::less<Key>,
+            typename Allocator = std::allocator<std::pair<const Key, Value>>>
+    explicit Dict(
+            const std::map<Key, Value, Compare, Allocator> &key_values
+    ) {
+        for (const auto &[k, v]: key_values) {
+            at(k) = v;
+        }
+    }
+
     /// Check if a dictionary is empty
     ///
     /// @return Whether the dictionary is empty or not
-    [[nodiscard]] bool empty() const {
+    [[nodiscard]]
+    bool empty() const {
         return key_list.empty();
     }
 
     /// Get the current size of the dictionary
     ///
     /// @return Get the current size of the dictionary (number of keys)
-    [[nodiscard]] size_t size() const {
+    [[nodiscard]]
+    size_t size() const {
         return key_list.size();
     }
 
@@ -95,11 +123,9 @@ public:
     /// @throws std::out_of_range If key not in dictionary
     ///
     /// @return Constant reference to value at `dict[key]`
-    const Value &operator[](const Key &key) const {
-        if (!key_exists(key)) {
-            throw std::out_of_range("Key not found in dictionary");
-        }
-
+    const Value &operator[](
+            const Key &key
+    ) const {
         return val_list[get_index(key)];
     }
 
@@ -108,7 +134,9 @@ public:
     /// @param key Dictionary key
     ///
     /// @return Constant reference to value at `dict[key]`
-    const Value &at(const Key &key) const {
+    const Value &at(
+            const Key &key
+    ) const {
         return operator[](key);
     }
 
@@ -117,7 +145,9 @@ public:
     /// @param key Dictionary key
     ///
     /// @return Reference to value at `dict[key]`
-    Value &operator[](const Key &key) {
+    Value &operator[](
+            const Key &key
+    ) {
         if (key_exists(key)) {
             const auto index = get_index(key);
 
@@ -135,7 +165,9 @@ public:
     /// @param key Dictionary key
     ///
     /// @return Reference to value at `dict[key]`
-    Value &at(const Key &key) {
+    Value &at(
+            const Key &key
+    ) {
         return operator[](key);
     }
 
@@ -192,16 +224,16 @@ public:
     /// Return a (const) iterator pointing to the end of the dictionary
     ///
     /// @return Iterator pointing to the end of the `const key_list`
-   auto end() const {
+    auto end() const {
         return key_list.end();
     }
-
-    // TODO Implement reversed
 
     /// Remove key from dictionary
     ///
     /// @throws std::out_of_range If key not in dictionary
-    void del(const Key &key) {
+    void del(
+            const Key &key
+    ) {
         if (!contains(key)) {
             throw std::out_of_range("Key not found in dictionary");
         }
@@ -217,7 +249,9 @@ public:
     /// @param key A possible key
     ///
     /// @return Whether key is present in dictionary
-    bool contains(const Key &key) const {
+    bool contains(
+            const Key &key
+    ) const {
         return key_exists(key);
     }
 
@@ -237,6 +271,18 @@ public:
         return new_dict;
     }
 
+    template<
+            typename Compare = std::less<Key>,
+            typename Allocator = std::allocator<std::pair<const Key, Value>>>
+    std::map<Key, Value, Compare, Allocator> map() const {
+        std::map<Key, Value, Compare, Allocator> new_map;
+        for (const auto &k: key_list) {
+            new_map[k] = at(k);
+        }
+
+        return new_map;
+    }
+
     /// Get value from dictionary at key `key`
     /// If the key is not present, the function returns the optional `default_value`,
     /// if this does not exist an error is thrown.
@@ -247,14 +293,19 @@ public:
     /// @throws std::runtime_error If key not in dictionary and no default value is specified
     ///
     /// @return Value at key, if present, default value otherwise
-    Value get(const Key &key, const std::optional<Value> &default_value = std::nullopt) const {
+    Value get(
+            const Key &key,
+            const std::optional<Value> &default_value = std::nullopt
+    ) const {
         if (key_exists(key)) {
             const auto idx = get_index(key);
             return val_list[idx];
         }
 
         if (!default_value) {
-            throw std::runtime_error("Key not found in dictionary and no default exists");
+            throw std::runtime_error(
+                    "Key not found in dictionary and no default exists"
+            );
         }
 
         return default_value.value();
@@ -269,7 +320,10 @@ public:
     /// @throws std::runtime_error If key not in dictionary and no default value
     ///
     /// @return Value at key in dictionary if it exists, otherwise the default.
-    Value pop(const Key &key, const std::optional<Value> &default_value = std::nullopt) {
+    Value pop(
+            const Key &key,
+            const std::optional<Value> &default_value = std::nullopt
+    ) {
         if (key_exists(key)) {
             const auto idx = get_index(key);
             const auto value = val_list[idx];
@@ -280,7 +334,9 @@ public:
         }
 
         if (!default_value) {
-            throw std::runtime_error("Key not found in dictionary and no default exists");
+            throw std::runtime_error(
+                    "Key not found in dictionary and no default exists"
+            );
         }
 
         return default_value.value();
@@ -310,11 +366,13 @@ public:
     /// @param default_value Default value to be used (default: `std::nullopt`)
     ///
     /// @return Value at key or default.
-    Value setdefault(const Key &key, const std::optional<Value> &default_value = std::nullopt) {
+    Value setdefault(
+            const Key &key,
+            const std::optional<Value> &default_value = std::nullopt
+    ) {
         if (key_exists(key)) {
             return at(key);
         }
-
 
         key_list.emplace_back(key);
         const Value value = default_value ? default_value.value() : Value();
@@ -326,7 +384,9 @@ public:
     /// Updates the dictionary with key/value pairs from `other`.
     ///
     /// @param other Another dictionary
-    void update(const Dict &other) {
+    void update(
+            const Dict &other
+    ) {
         for (const auto &[k, v]: other.items()) {
             at(k) = v;
         }
@@ -335,7 +395,9 @@ public:
     /// Updates the dictionary with key/value pairs from a list
     ///
     /// @param pairs A list of key-value pairs
-    void update(const std::initializer_list<Item<Key, Value>> &pairs) {
+    void update(
+            const std::initializer_list<Item<Key, Value>> &pairs
+    ) {
         for (const auto &[k, v]: pairs) {
             at(k) = v;
         }
@@ -344,12 +406,24 @@ public:
     /// Updates the dictionary with key/value pairs from a vector
     ///
     /// @param pairs A list of key-value pairs
-    void update(const std::vector<Item<Key, Value>> &pairs) {
+    void update(
+            const std::vector<Item<Key, Value>> &pairs
+    ) {
         for (const auto &[k, v]: pairs) {
             at(k) = v;
         }
     }
 
+    template<
+            typename Compare = std::less<Key>,
+            typename Allocator = std::allocator<std::pair<const Key, Value>>>
+    void update(
+            const std::map<Key, Value, Compare, Allocator> &other
+    ) {
+        for (const auto &[k, v]: other) {
+            at(k) = v;
+        }
+    }
 
     /// Create a new dictionary with merged keys from `this` and `other`.
     /// The values of `other` take priority when they share keys.
@@ -357,7 +431,9 @@ public:
     /// @param other Dictionary
     ///
     /// @return Dictionary which merges `this` and `other`
-    Dict operator|(const Dict &other) const {
+    Dict operator|(
+            const Dict &other
+    ) const {
         auto dict = copy();
         dict.update(other);
 
@@ -367,27 +443,41 @@ public:
     /// Updates dictionary with values from another. Wrapper for `update()`
     ///
     /// @param other Another dictionary
-    void operator|=(const Dict &other) {
+    void operator|=(
+            const Dict &other
+    ) {
         update(other);
     }
 
     /// Updates dictionary with values from initializer list. Wrapper for `update()`
     ///
-    /// @param list An list of key-value pairs
-    void operator|=(const std::initializer_list<Item<Key, Value>> &list) {
+    /// @param list A list of key-value pairs
+    void operator|=(
+            const std::initializer_list<Item<Key, Value>> &list
+    ) {
         update(list);
     }
 
     /// Update dictionary with values from vector. Wrapper for `update()`
     ///
     /// @param key_values A vector of key-value pairs
-    void operator|=(const std::vector<Item<Key, Value>> &key_values) {
+    void operator|=(
+            const std::vector<Item<Key, Value>> &key_values
+    ) {
         update(key_values);
+    }
+
+    template<
+            typename Compare = std::less<Key>,
+            typename Allocator = std::allocator<std::pair<const Key, Value>>>
+    void operator|=(
+            const std::map<Key, Value, Compare, Allocator> &other
+    ) {
+        update(other);
     }
 };
 
 // TODO Template specialisation for Value `bool`
-// TODO Add map constructor, converter and updater
 
 /// Return all keys from a `Dict` as a list (vector)
 ///
@@ -397,7 +487,9 @@ public:
 ///
 /// @return Vector of keys
 template<typename Key, typename Value>
-std::vector<Key> list(const Dict<Key, Value> &dict) {
+std::vector<Key> list(
+        const Dict<Key, Value> &dict
+) {
     return dict.keys();
 }
 
@@ -409,7 +501,9 @@ std::vector<Key> list(const Dict<Key, Value> &dict) {
 ///
 /// @return Length (size) of a dictionary (number of keys)
 template<typename Key, typename Value>
-size_t len(const Dict<Key, Value> &dict) {
+size_t len(
+        const Dict<Key, Value> &dict
+) {
     return dict.size();
 }
 
@@ -421,7 +515,9 @@ size_t len(const Dict<Key, Value> &dict) {
 ///
 /// @return Dictionary
 template<typename Key, typename Value = Key>
-Dict<Key, Value> dict(const std::initializer_list<Item<Key, Value>> &list) {
+Dict<Key, Value> dict(
+        const std::initializer_list<Item<Key, Value>> &list
+) {
     return Dict<Key, Value>(list);
 }
 
@@ -436,8 +532,8 @@ Dict<Key, Value> dict(const std::initializer_list<Item<Key, Value>> &list) {
 /// @return Dictionary with keys from `keys` and `value` in each entry.
 template<typename Key, typename Value>
 Dict<Key, Value> fromkeys(
-    const std::vector<Key> &keys,
-    const std::optional<Value> &value = std::nullopt
+        const std::vector<Key> &keys,
+        const std::optional<Value> &value = std::nullopt
 ) {
     Dict<Key, Value> dict;
     for (const auto &key: keys) {
@@ -450,6 +546,24 @@ Dict<Key, Value> fromkeys(
 
     return dict;
 }
+
+/// Create a new dictionary from another where the order of items is reversed.
+///
+/// @tparam Key Dictionary key type
+/// @tparam Value Dictionary value type
+/// @param dict Input dictionary
+///
+/// @return Dictionary with the revese order of the input dictionary
+template<typename Key, typename Value>
+auto reversed(
+        const Dict<Key, Value> &dict
+) {
+    auto items = dict.items();
+    std::reverse(items.begin(), items.end());
+
+    return Dict(items);
 }
+
+} // namespace dictcpp
 
 #endif //DICTCPP_HPP
