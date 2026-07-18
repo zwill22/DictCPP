@@ -44,7 +44,7 @@ class Dict {
             }
         }
 
-        throw std::runtime_error("Key not in dictionary");
+        throw std::runtime_error("Key not found in dictionary");
     }
 
 public:
