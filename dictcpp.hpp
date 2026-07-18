@@ -548,6 +548,13 @@ Dict<Key, Value> fromkeys(
     return dict;
 }
 
+/// Create a new dictionary from another where the order of items is reversed.
+///
+/// @tparam Key Dictionary key type
+/// @tparam Value Dictionary value type
+/// @param dict Input dictionary
+///
+/// @return Dictionary with the revese order of the input dictionary
 template<typename Key, typename Value>
 auto reversed(
         const Dict<Key, Value> &dict
