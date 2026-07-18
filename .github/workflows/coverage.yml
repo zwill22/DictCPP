@@ -67,7 +67,7 @@ jobs:
       - name: Test
         run: |
           ctest -C all --output-on-failure
-          gcovr -e CMakeFiles --cobertura-pretty --cobertura coverage.xml
+          gcovr -e CMakeFiles --cobertura-pretty --cobertura coverage.xml --exclude-directories tests
           cat coverage.xml
 
       - name: Upload results to Codecov
