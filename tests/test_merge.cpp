@@ -4,15 +4,12 @@
 
 using dictcpp::Dict;
 
-TEST_CASE("Update dictionary") {
-    auto dict1 = Dict<int, char>{
-        {1, 'a'},
-        {2, 'b'},
-        {4, 'c'},
-        {8, 'e'}
-    };
+TEST_CASE(
+        "Update dictionary"
+) {
+    auto dict1 = Dict<int, char> {{1, 'a'}, {2, 'b'}, {4, 'c'}, {8, 'e'}};
 
-    const auto dict2 = Dict<int, char>{
+    const auto dict2 = Dict<int, char> {
         {2, 'z'},
         {8, 'g'},
         {16, 'j'},
@@ -37,21 +34,17 @@ TEST_CASE("Update dictionary") {
     CHECK(dict1.at(64) == 't');
 }
 
+TEST_CASE(
+        "Merge dictionaries"
+) {
+    const auto dict1 = Dict<int, char> {{1, 'a'}, {2, 'b'}, {4, 'c'}, {8, 'e'}};
 
-TEST_CASE("Merge dictionaries") {
-    const auto dict1 = Dict<int, char>{
-            {1, 'a'},
-            {2, 'b'},
-            {4, 'c'},
-            {8, 'e'}
-    };
-
-    const auto dict2 = Dict<int, char>{
-            {2, 'z'},
-            {8, 'g'},
-            {16, 'j'},
-            {32, 'm'},
-            {64, 't'}
+    const auto dict2 = Dict<int, char> {
+        {2, 'z'},
+        {8, 'g'},
+        {16, 'j'},
+        {32, 'm'},
+        {64, 't'}
     };
 
     REQUIRE(dict1.size() == 4);
@@ -70,20 +63,17 @@ TEST_CASE("Merge dictionaries") {
     CHECK(dict3.at(64) == 't');
 }
 
-TEST_CASE("Update dictionary with |=") {
-    auto dict1 = Dict<int, char>{
-            {1, 'a'},
-            {2, 'b'},
-            {4, 'c'},
-            {8, 'd'}
-    };
+TEST_CASE(
+        "Update dictionary with |="
+) {
+    auto dict1 = Dict<int, char> {{1, 'a'}, {2, 'b'}, {4, 'c'}, {8, 'd'}};
 
-    const auto dict2 = Dict<int, char>{
-            {2, 'e'},
-            {8, 'f'},
-            {16, 'g'},
-            {32, 'h'},
-            {64, 'i'}
+    const auto dict2 = Dict<int, char> {
+        {2, 'e'},
+        {8, 'f'},
+        {16, 'g'},
+        {32, 'h'},
+        {64, 'i'}
     };
 
     REQUIRE(dict1.size() == 4);
@@ -103,21 +93,12 @@ TEST_CASE("Update dictionary with |=") {
     CHECK(dict1.at(64) == 'i');
 }
 
-TEST_CASE("Update dictionary with |= initializer list") {
-    auto dict1 = Dict<int, char>{
-                {1, 'a'},
-                {2, 'b'},
-                {4, 'c'},
-                {8, 'd'}
-    };
+TEST_CASE(
+        "Update dictionary with |= initializer list"
+) {
+    auto dict1 = Dict<int, char> {{1, 'a'}, {2, 'b'}, {4, 'c'}, {8, 'd'}};
 
-    dict1 |= {
-                {2, 'e'},
-                {8, 'f'},
-                {16, 'g'},
-                {32, 'h'},
-                {64, 'i'}
-    };
+    dict1 |= {{2, 'e'}, {8, 'f'}, {16, 'g'}, {32, 'h'}, {64, 'i'}};
 
     REQUIRE(dict1.size() == 7);
 
@@ -130,20 +111,17 @@ TEST_CASE("Update dictionary with |= initializer list") {
     CHECK(dict1.at(64) == 'i');
 }
 
-TEST_CASE("Update dictionary with |= vector") {
-    auto dict1 = Dict<int, char>{
-                    {1, 'a'},
-                    {2, 'b'},
-                    {4, 'c'},
-                    {8, 'd'}
-    };
+TEST_CASE(
+        "Update dictionary with |= vector"
+) {
+    auto dict1 = Dict<int, char> {{1, 'a'}, {2, 'b'}, {4, 'c'}, {8, 'd'}};
 
-    const auto extra = std::vector<dictcpp::Item<int, char>>{
-                    {2, 'e'},
-                    {8, 'f'},
-                    {16, 'g'},
-                    {32, 'h'},
-                    {64, 'i'}
+    const auto extra = std::vector<dictcpp::Item<int, char>> {
+        {2, 'e'},
+        {8, 'f'},
+        {16, 'g'},
+        {32, 'h'},
+        {64, 'i'}
     };
 
     dict1 |= extra;
