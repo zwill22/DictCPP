@@ -43,7 +43,8 @@ class Dict {
                 return i;
             }
         }
-        throw std::logic_error("`get_index` called but key not in dictionary");
+
+        throw std::runtime_error("Key not in dictionary");
     }
 
 public:
@@ -125,10 +126,6 @@ public:
     const Value &operator[](
             const Key &key
     ) const {
-        if (!key_exists(key)) {
-            throw std::out_of_range("Key not found in dictionary");
-        }
-
         return val_list[get_index(key)];
     }
 
