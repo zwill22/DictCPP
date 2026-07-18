@@ -20,7 +20,7 @@ jobs:
       - name: setup python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: install cmake
         shell: bash
@@ -67,7 +67,7 @@ jobs:
       - name: Test
         run: |
           ctest -C all --output-on-failure
-          gcovr -e CMakeFiles --cobertura-pretty --cobertura coverage.xml --exclude-directories tests
+          gcovr --cobertura-pretty --cobertura coverage.xml
           cat coverage.xml
 
       - name: Upload results to Codecov

@@ -8,7 +8,6 @@ coverage:
 parsers:
   cobertura:
     partials_as_hits: false
-    handle_missing_conditons: false
 ignore:
   - "tests/"
   - "test_*.cpp"
