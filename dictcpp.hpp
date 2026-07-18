@@ -1,10 +1,11 @@
 #ifndef DICTCPP_HPP
 #define DICTCPP_HPP
+#include <algorithm>
+#include <map>
 #include <optional>
 #include <set>
 #include <stdexcept>
 #include <vector>
-#include <map>
 
 namespace dictcpp {
 
